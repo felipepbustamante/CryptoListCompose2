@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cl.desafiolatam.cryptolistcompose2.domain.Crypto
 
-@Database(entities = [LocalCrypto::class], version = 2, exportSchema = false)
+@Database(entities = [LocalCrypto::class], version = 3, exportSchema = false)
 abstract class CryptosDB : RoomDatabase(){
 
     abstract val cryptosDao: CryptosDao

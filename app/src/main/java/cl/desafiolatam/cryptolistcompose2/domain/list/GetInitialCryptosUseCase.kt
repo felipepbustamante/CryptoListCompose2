@@ -9,7 +9,7 @@ class GetInitialCryptosUseCase {
 
     suspend operator fun invoke(): List<Crypto> {
         repository.loadCryptos()
-        return repository.getLocalCryptos().map{ Crypto(it.id, it.name, it.symbol, it.priceUsd, it.changePercent24Hr, it.supply, it.marketCapUsd, it.maxSupply)}
+        return repository.getLocalCryptos().map{ Crypto(it.id, it.name, it.symbol, it.priceUsd, it.changePercent24Hr, it.supply, it.marketCapUsd, it.maxSupply, it.timestamp)}
     }
 
 }

@@ -8,12 +8,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cl.desafiolatam.cryptolistcompose2.domain.Crypto
+import cl.desafiolatam.cryptolistcompose2.model.toDate
 import cl.desafiolatam.cryptolistcompose2.presenter.list.takeDecimals
 import coil.compose.AsyncImage
 
@@ -25,7 +27,9 @@ fun CryptoDetailScreen(
     if (state.crypto != null){
         Box(){
             if(state.isLoading){
-                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
+                Column(modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center){
                     CircularProgressIndicator()
                 }
             }
@@ -50,8 +54,12 @@ fun CryptoDetailScreen(
                     Text(state.crypto.symbol, modifier = Modifier
                         .weight(0.25f)
                         .padding(bottom = 10.dp), fontSize = 30.sp)
+                    Text(state.crypto.timestamp.toDate(), modifier = Modifier
+                        .weight(0.25f))
 
-                    Row(modifier = Modifier.fillMaxWidth().weight(0.15f)){
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.15f)){
                         Text(state.crypto.name, modifier = Modifier
                             .weight(0.2f)
                             .padding(bottom = 10.dp, start = 10.dp))
@@ -61,9 +69,32 @@ fun CryptoDetailScreen(
                     }
                 }
 
-                Text(state.crypto.name, modifier = Modifier
-                    .weight(0.65f)
-                    .padding(bottom = 6.dp))
+                Column(
+                    modifier = Modifier.weight(0.65f).background(Color(0,0,0,18))
+                ){
+                    Text("Dif (24h): ${state.crypto.changePercent24Hr.takeDecimals(2)}%",
+                        modifier = Modifier
+                        .padding(top = 18.dp, start = 10.dp)
+                        .fillMaxWidth(),
+                        textAlign = TextAlign.Start,
+                        fontSize = 20.sp,
+                        color = if(state.crypto.changePercent24Hr.first() == '-') Color.Red else Color(
+                            76,
+                            175,
+                            80,
+                            255
+                        )
+                    )
+
+                    Text("marketCap: ${state.crypto.marketCapUsd.takeDecimals(2)}",
+                        modifier = Modifier
+                            .padding(top = 18.dp, start = 10.dp)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Start,
+                        fontSize = 20.sp)
+                }
+
+
             }
         }
 
@@ -76,5 +107,5 @@ fun Prev(){
     CryptoDetailScreen(state = CryptoDetailState(
         Crypto(id="cardano", name="Cardano", symbol="ADA", priceUsd="0.4940375441169096",
             changePercent24Hr="-4.5957906512680912", supply="33752565071.2880000000000000",
-            marketCapUsd="16675034355.4653073181302516", maxSupply="45000000000.0000000000000000"), false))
+            marketCapUsd="16675034355.4653073181302516", maxSupply="45000000000.0000000000000000", 1394875063249), false))
 }

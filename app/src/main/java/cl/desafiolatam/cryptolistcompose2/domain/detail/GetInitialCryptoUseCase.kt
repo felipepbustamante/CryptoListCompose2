@@ -19,7 +19,8 @@ class GetInitialCryptoUseCase {
                 localCrypto.changePercent24Hr,
                 localCrypto.supply,
                 localCrypto.marketCapUsd,
-                localCrypto.maxSupply)
+                localCrypto.maxSupply,
+                localCrypto.timestamp)
         } else {
             null
         }

@@ -5,6 +5,8 @@ import cl.desafiolatam.cryptolistcompose2.CryptoApplication
 import cl.desafiolatam.cryptolistcompose2.model.local.CryptosDB
 import cl.desafiolatam.cryptolistcompose2.model.local.LocalCrypto
 import cl.desafiolatam.cryptolistcompose2.model.remote.CryptoApi
+import cl.desafiolatam.cryptolistcompose2.model.remote.CryptoData
+import cl.desafiolatam.cryptolistcompose2.model.remote.CryptoDetailData
 import cl.desafiolatam.cryptolistcompose2.model.remote.RemoteCrypto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,6 +15,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.ConnectException
 import java.net.UnknownHostException
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.util.*
 
 class CryptoRepository {
 
@@ -52,23 +58,29 @@ class CryptoRepository {
         }
     }
 
-    private suspend fun getRemoteCryptos(): List<RemoteCrypto>{
+    private suspend fun getRemoteCryptos(): CryptoData {
         return withContext(Dispatchers.IO){
-            return@withContext restInterface.getCryptos().data
+            return@withContext restInterface.getCryptos()
         }
     }
 
     private suspend fun refreshListCache(){
         val remoteCryptos = getRemoteCryptos()
-        cryptosDao.addAll(remoteCryptos.map{
-            LocalCrypto(it.id, it.name, it.symbol, it.priceUsd, it.changePercent24Hr, it.supply, it.marketCapUsd, it.maxSupply)
+        cryptosDao.addAll(remoteCryptos.data.map{
+            LocalCrypto(it.id, it.name, it.symbol, it.priceUsd, it.changePercent24Hr, it.supply, it.marketCapUsd, it.maxSupply, remoteCryptos.timestamp)
         })
     }
 
     suspend fun loadCrypto(id: String) {
         try {
             val remoteCrypto = getRemoteCrypto(id)
-            cryptosDao.add(LocalCrypto(remoteCrypto.id, remoteCrypto.name, remoteCrypto.symbol, remoteCrypto.priceUsd, remoteCrypto.changePercent24Hr, remoteCrypto.supply, remoteCrypto.marketCapUsd, remoteCrypto.maxSupply))
+            with(remoteCrypto){
+                cryptosDao.add(LocalCrypto(data.id,
+                    data.name, data.symbol,
+                    data.priceUsd, data.changePercent24Hr,
+                    data.supply, data.marketCapUsd, data.maxSupply, timestamp))
+            }
+
         } catch (e: Exception) {
             when(e){
                 is UnknownHostException,
@@ -83,12 +95,18 @@ class CryptoRepository {
         }
     }
 
-    private suspend fun getRemoteCrypto(id: String): RemoteCrypto {
+    private suspend fun getRemoteCrypto(id: String): CryptoDetailData {
         return withContext(Dispatchers.IO){
             Log.d("sdraf", "getting : ${restInterface.getCrypto(id)}")
-            return@withContext restInterface.getCrypto(id).data
+            return@withContext restInterface.getCrypto(id)
         }
     }
 
 
+}
+
+fun Long.toDate(): String{
+    val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", Locale.ENGLISH)
+    val time  = this
+    return simpleDateFormat.format(time).toString()
 }

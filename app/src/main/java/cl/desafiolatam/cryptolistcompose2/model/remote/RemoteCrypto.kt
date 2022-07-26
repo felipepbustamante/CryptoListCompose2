@@ -15,9 +15,9 @@ import cl.desafiolatam.cryptolistcompose2.domain.Crypto
 //    "vwap24Hr":"0.3570084514717920",
 //    "explorer":"https://xrpcharts.ripple.com/#/graph/"},
 
-data class CryptoData(val data: List<RemoteCrypto>, val timeStamp: Long)
+data class CryptoData(val data: List<RemoteCrypto>, val timestamp: Long)
 
-data class CryptoDetailData(val data: RemoteCrypto, val timeStamp: Long)
+data class CryptoDetailData(val data: RemoteCrypto, val timestamp: Long)
 
 data class RemoteCrypto (
     val id: String,

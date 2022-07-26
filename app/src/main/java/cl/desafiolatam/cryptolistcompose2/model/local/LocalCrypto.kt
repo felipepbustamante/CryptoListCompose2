@@ -13,5 +13,6 @@ data class LocalCrypto(
     val changePercent24Hr: String,
     val supply: String,
     val marketCapUsd: String,
-    val maxSupply: String?) {
+    val maxSupply: String?,
+    val timestamp: Long) {
 }

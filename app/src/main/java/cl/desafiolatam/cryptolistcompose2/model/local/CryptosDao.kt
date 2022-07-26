@@ -4,8 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import cl.desafiolatam.cryptolistcompose2.domain.Crypto
-import cl.desafiolatam.cryptolistcompose2.model.remote.RemoteCrypto
 
 @Dao
 interface CryptosDao {
