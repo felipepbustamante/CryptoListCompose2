@@ -6,7 +6,7 @@ Al hacer click en alguna moneda, se muestra una nueva pantalla mostrando el deta
 Esta aplicación tambien cuenta con un campo de texto editable cuya función es filtrar las monedas según el texto introducido.<br/>
 Por último, la aplicación puede guardar el usuario en los SharedPreferences de la app, guardando el estado luego del cierre de la aplicación.<br/>
 <br/>
-Conpeptos ocupados:<br/>
+Conceptos ocupados:<br/>
 Kotlin<br/>
 Compose<br/>
 MVVM<br/>
